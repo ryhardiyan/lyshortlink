@@ -103,6 +103,23 @@ app.post('/api/shorten', (req, res) => {
   res.json(data);
 });
 
+// API verifikasi password
+app.post('/api/verify-password', (req, res) => {
+  const { shortId, password } = req.body;
+  const db = loadDB();
+  const item = db.find((i) => i.shortId === shortId);
+  if (!item) return res.status(404).json({ error: 'Shortlink tidak ditemukan' });
+
+  if (item.password === password) {
+    item.clicks = (item.clicks || 0) + 1;
+    item.lastAccess = new Date().toISOString();
+    saveDB(db);
+    return res.json({ success: true, originalUrl: item.originalUrl });
+  } else {
+    return res.status(403).json({ error: 'Password salah' });
+  }
+});
+
 // API untuk kirim backup DB ke Telegram
 app.get('/api/admin/backup', async (req, res) => {
   try {
@@ -119,16 +136,13 @@ app.get('/:shortId', (req, res) => {
   const item = db.find((i) => i.shortId === req.params.shortId);
   if (!item) return res.status(404).send('Shortlink tidak ditemukan');
 
-  // Hitung klik
-  item.clicks = (item.clicks || 0) + 1;
-  item.lastAccess = new Date().toISOString();
-  saveDB(db);
-
-  // Jika ada password, arahkan ke halaman verifikasi
   if (item.password) {
     return res.redirect(`/password.html?id=${item.shortId}`);
   }
 
+  item.clicks = (item.clicks || 0) + 1;
+  item.lastAccess = new Date().toISOString();
+  saveDB(db);
   res.redirect(item.originalUrl);
 });
 
