@@ -113,11 +113,6 @@ app.get('/api/admin/backup', async (req, res) => {
   }
 });
 
-// Proteksi akses halaman tertentu
-app.get(['/admin', '/dashboard', '/settings'], (req, res) => {
-  res.status(403).send('🚫 Akses ditolak. Halaman ini dilindungi.');
-});
-
 // Route redirect berdasarkan shortId
 app.get('/:shortId', (req, res) => {
   const db = loadDB();
