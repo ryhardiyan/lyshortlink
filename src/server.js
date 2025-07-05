@@ -1,4 +1,4 @@
-// server.js - versi lengkap dengan notifikasi Telegram + backup
+// server.js - versi lengkap dengan notifikasi Telegram + backup + fix Vercel 405 (gunakan CommonJS)
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -62,6 +62,9 @@ async function kirimFileKeTelegram(filepath) {
 // API to create shortlink
 app.post('/api/shorten', (req, res) => {
   const { originalUrl, password } = req.body;
+
+  if (!originalUrl) return res.status(400).json({ error: 'URL tidak boleh kosong.' });
+
   const shortId = nanoid(6);
   const date = new Date().toISOString();
 
@@ -86,7 +89,7 @@ app.post('/api/shorten', (req, res) => {
                 `🆔 Slug: ${shortId}\n` +
                 `🔐 Password: ${password ? 'YA' : 'TIDAK'}\n` +
                 `📅 Tanggal: ${date}`;
-  kirimNotifikasiPesan(notif);
+  kirimNotifikasiPesan(notif).catch(console.error);
 
   res.json(data);
 });
