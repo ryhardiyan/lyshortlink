@@ -1,211 +1,162 @@
+Berikut ini kode lengkap style.css yang sudah diperbarui, clean, responsif, dan keren buat web shortlink lo:
+
+/* style.css - versi rapih dan responsif */
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #0e0e0e;
-  color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
 }
 
 header {
   text-align: center;
-  padding: 2rem 1rem;
-  background: #1a1a1a;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  padding: 2rem 1rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
 }
+
 .logo {
-  font-size: 2.2rem;
+  font-size: 2rem;
   margin: 0;
 }
+
 .tagline {
-  color: #aaa;
-  margin-top: 0.3rem;
+  margin-top: 0.25rem;
+  color: #666;
 }
 
 main {
+  padding: 1rem;
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: auto;
 }
 
 .shortener-box {
-  background: #1e1e1e;
-  border-radius: 1rem;
+  background: #fff;
   padding: 2rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 }
-.shortener-box h2 {
-  margin-bottom: 1rem;
+
+h2 {
+  text-align: center;
 }
 
 .form-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   gap: 1rem;
-  align-items: center;
-  margin-top: 1rem;
+  max-width: 600px;
+  margin: 1rem auto 0;
 }
 
 .input-container {
-  position: relative;
-  width: 70%;
-  min-width: 280px;
-}
-
-.icon {
-  position: absolute;
-  left: 0.8rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.1rem;
-  color: #888;
+  display: flex;
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: #fff;
+  gap: 0.5rem;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input-container input {
-  padding: 0.7rem 1rem 0.7rem 2.2rem;
-  width: 100%;
-  border-radius: 0.7rem;
-  border: 1px solid #333;
-  background: #2a2a2a;
-  color: #f0f0f0;
+  flex: 1;
   font-size: 1rem;
-  transition: border 0.3s ease, background 0.3s ease;
-}
-.input-container input:focus {
+  border: none;
   outline: none;
-  border-color: #00bcd4;
-  background: #1f1f1f;
+  padding: 0.5rem;
+  min-width: 0;
 }
 
-.paste-btn {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
+.input-container .paste-btn {
+  background: none;
   border: none;
-  color: #aaa;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: color 0.2s ease;
-}
-.paste-btn:hover {
-  color: #00bcd4;
+  padding: 0 0.5rem;
 }
 
 .generate-btn {
-  padding: 0.7rem 1.5rem;
-  border: none;
-  border-radius: 0.7rem;
-  background: linear-gradient(135deg, #00bcd4, #00838f);
+  background-color: #2d89ef;
   color: white;
-  font-weight: bold;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s;
 }
+
 .generate-btn:hover {
-  background: linear-gradient(135deg, #0097a7, #006064);
+  background-color: #1b6fc2;
 }
 
 .result {
-  font-size: 1rem;
-  word-break: break-word;
   margin-top: 1rem;
+  word-break: break-word;
+  text-align: center;
+  font-size: 1rem;
 }
-.result a {
-  color: #4dd0e1;
-  text-decoration: none;
+
+.toast {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
 }
-.result a:hover {
-  text-decoration: underline;
+
+.toast.show {
+  opacity: 1;
+}
+
+.toast.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.toast.error {
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .api-docs {
-  background: #161616;
+  background: #f0f0f0;
   padding: 1.5rem;
-  border-radius: 1rem;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-.api-docs pre {
-  white-space: pre-wrap;
-  word-break: break-word;
-  background: #222;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
+  margin-top: 2rem;
+  border-radius: 8px;
 }
 
 footer {
-  background: #1a1a1a;
+  margin-top: 3rem;
+  text-align: center;
   padding: 1rem;
-  text-align: center;
-  font-size: 0.85rem;
-  color: #aaa;
-}
-footer a {
-  color: #00bcd4;
-  text-decoration: none;
-}
-footer a:hover {
-  text-decoration: underline;
-}
-.toast {
-  visibility: hidden;
-  min-width: 250px;
-  margin: auto;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 0.5rem;
-  padding: 0.8rem;
-  position: fixed;
-  z-index: 99;
-  left: 0; right: 0; bottom: 2rem;
-  font-size: 0.95rem;
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.3s ease;
-}
-.toast.show {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-}
-.toast.success { background: #009688; }
-.toast.error { background: #e53935; }
-.toast.info { background: #2196f3; }
-
-/* Spinner Loading */
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 3px solid #ddd;
-  border-top: 3px solid #00bcd4;
-  border-radius: 50%;
-  display: inline-block;
-  animation: spin 1s linear infinite;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Copy Button */
-.copy-btn {
-  margin-left: 8px;
-  padding: 0.2rem 0.5rem;
-  background: #333;
-  border: none;
-  border-radius: 0.4rem;
   font-size: 0.9rem;
-  cursor: pointer;
-  color: #fff;
+  background: #f1f1f1;
+  border-top: 1px solid #ccc;
 }
-.copy-btn:hover {
-  background: #00bcd4;
-  color: #000;
+
+footer a {
+  text-decoration: none;
+  color: #2d89ef;
+  margin: 0 0.25rem;
+}
+
+@media (max-width: 480px) {
+  .input-container {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .generate-btn {
+    width: 100%;
+  }
 }
