@@ -68,13 +68,22 @@ async function kirimFileKeTelegram(filepath) {
   if (!res.ok) throw new Error(`Telegram API error: ${res.statusText}`);
 }
 
+function generateShortId(length = 6) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 // API to create shortlink
 app.post('/api/shorten', (req, res) => {
   const { originalUrl, password } = req.body;
 
   if (!originalUrl) return res.status(400).json({ error: 'URL tidak boleh kosong.' });
 
-  const shortId = nanoid(6);
+  const shortId = generateShortId();
   const date = new Date().toISOString();
 
   const db = loadDB();
