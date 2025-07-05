@@ -214,10 +214,15 @@ app.get('/api/admin/export', (req, res) => {
   res.send(JSON.stringify(db, null, 2));
 });
 
+// Tampilkan halaman admin
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
 app.get('/:shortId', (req, res) => {
   const db = loadDB();
   const item = db.find((i) => i.shortId === req.params.shortId);
-  if (!item) return res.status(404).send('Shortlink tidak ditemukan');
+  if (!item) return res.status(404).send('Halaman tidak ditemukan');
 
   if (item.password) {
     return res.redirect(`/password.html?id=${item.shortId}`);
