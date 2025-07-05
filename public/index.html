@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>lyshortlink | Simple URL Shortener</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <!-- Tambahkan ini di dalam <head> -->
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/icon-192.png" />
+<meta name="theme-color" content="#009688" />
+</head>
+<body>
+  <header>
+    <h1 class="logo">🔗 lyshortlink</h1>
+    <p class="tagline">Solusi cepat & ringan untuk membuat shortlink URL kamu.</p>
+  </header>
+
+  <main>
+    <section class="shortener-box">
+      <h2>Shorten URL Sekarang</h2>
+      <div class="form-wrapper">
+        <div class="input-container">
+          <span class="icon">🔗</span>
+          <input type="text" id="urlInput" placeholder="https://contoh.com/link-panjang" />
+          <button class="paste-btn" onclick="pasteFromClipboard()" title="Paste dari clipboard">📋</button>
+        </div>
+        <button class="generate-btn" onclick="shortenUrl()">Generate</button>
+      </div>
+      <div id="result" class="result"></div>
+      <div id="toast" class="toast"></div>
+    </section>
+
+    <section class="api-docs">
+      <h3>📚 Dokumentasi API</h3>
+      <pre><code>
+POST /api/shorten
+Content-Type: application/json
+
+{
+  "originalUrl": "https://example.com"
+}
+
+RESPONSE:
+{
+  "shortUrl": "https://lys.my.id/abc123",
+  "originalUrl": "https://example.com",
+  "shortId": "abc123",
+  "date": "2025-07-05T12:34:56.789Z"
+}
+      </code></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 lyshortlink. All rights reserved.</p>
+    <p>
+      <a href="https://wa.me/628123456789" target="_blank">WhatsApp</a> • 
+      <a href="https://instagram.com/lyshortlink" target="_blank">Instagram</a> • 
+      <a href="mailto:support@lys.my.id">Email</a>
+    </p>
+  </footer>
+
+  <!-- 💻 Script mulai di sini -->
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const resultDiv = document.getElementById('result');
+    const toast = document.getElementById('toast');
+
+    async function shortenUrl() {
+      const originalUrl = urlInput.value;
+      if (!originalUrl) {
+        showToast("Masukkan URL dulu, bro!", "error");
+        return;
+      }
+
+      showLoading(true);
+      try {
+        const res = await fetch('/api/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ originalUrl })
+        });
+
+        const data = await res.json();
+        showLoading(false);
+
+        if (data.shortUrl) {
+          resultDiv.innerHTML = `
+            ✅ <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>
+            <button class="copy-btn" onclick="copyToClipboard('${data.shortUrl}')">📋</button>
+          `;
+          showToast("Shortlink berhasil dibuat!", "success");
+          urlInput.value = ""; // Clear input setelah sukses
+        } else {
+          resultDiv.textContent = data.error || 'Gagal buat shortlink.';
+          showToast(data.error || "Gagal memproses URL.", "error");
+        }
+      } catch (err) {
+        showLoading(false);
+        showToast("Terjadi kesalahan saat menghubungi server.", "error");
+      }
+    }
+
+    async function pasteFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        urlInput.value = text;
+        showToast("URL berhasil dipaste dari clipboard", "info");
+      } catch (err) {
+        alert('Clipboard tidak bisa diakses. Coba izinkan browser!');
+      }
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Shortlink disalin ke clipboard!", "success");
+      }, () => {
+        showToast("Gagal menyalin ke clipboard!", "error");
+      });
+    }
+
+    function showLoading(isLoading) {
+      if (isLoading) {
+        resultDiv.innerHTML = `<span class="spinner"></span> Sedang memproses...`;
+      }
+    }
+
+    function showToast(message, type = "info") {
+      toast.textContent = message;
+      toast.className = `toast show ${type}`;
+      setTimeout(() => {
+        toast.className = 'toast';
+      }, 3000);
+    }
+  </script>
+  <!-- Tambahkan ini di bawah semua script sebelum </body> -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('✅ Service Worker terdaftar'))
+      .catch(err => console.error('❌ Gagal daftarin SW:', err));
+  }
+</script>
+</body>
+</html>
