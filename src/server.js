@@ -1,4 +1,4 @@
-// server.js - versi lengkap dengan notifikasi Telegram + backup + fix Vercel 405 (gunakan CommonJS)
+// server.js - versi lengkap dengan notifikasi Telegram, backup, proteksi domain & input fix
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -16,6 +16,15 @@ const DB_PATH = path.join(__dirname, 'database.json');
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
+
+// Middleware proteksi domain
+app.use((req, res, next) => {
+  const host = req.headers.host;
+  if (!host.includes('lys.my.id') && !host.includes('localhost')) {
+    return res.status(403).send('❌ Akses ditolak. Domain tidak diizinkan.');
+  }
+  next();
+});
 
 // Load database
 function loadDB() {
@@ -102,6 +111,11 @@ app.get('/api/admin/backup', async (req, res) => {
   } catch (e) {
     res.status(500).json({ error: 'Gagal kirim backup: ' + e.message });
   }
+});
+
+// Proteksi akses halaman tertentu
+app.get(['/admin', '/dashboard', '/settings'], (req, res) => {
+  res.status(403).send('🚫 Akses ditolak. Halaman ini dilindungi.');
 });
 
 // Route redirect berdasarkan shortId
