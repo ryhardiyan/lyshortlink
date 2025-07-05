@@ -20,7 +20,7 @@ app.use(express.static('public'));
 // Middleware proteksi domain
 app.use((req, res, next) => {
   const host = req.headers.host;
-  if (!host.includes('lys.my.id') && !host.includes('localhost')) {
+  if (!host.includes('lyshortlink-production.up.railway.app') && !host.includes('localhost')) {
     return res.status(403).send('❌ Akses ditolak. Domain tidak diizinkan.');
   }
   next();
