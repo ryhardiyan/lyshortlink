@@ -121,6 +121,66 @@ app.get('/api/admin/backup', async (req, res) => {
   }
 });
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+
+// Simpan session login admin
+let isAdminLoggedIn = false;
+
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASSWORD) {
+    isAdminLoggedIn = true;
+    return res.json({ success: true });
+  } else {
+    return res.status(403).json({ success: false, error: 'Password admin salah' });
+  }
+});
+
+// Middleware proteksi admin
+function verifyAdmin(req, res, next) {
+  if (!isAdminLoggedIn) {
+    return res.status(403).json({ error: 'Akses ditolak. Login dulu.' });
+  }
+  next();
+}
+
+// Semua endpoint admin pakai middleware ini
+app.get('/api/admin/all', verifyAdmin, (req, res) => {
+  res.json(loadDB());
+});
+
+app.delete('/api/admin/delete/:id', verifyAdmin, (req, res) => {
+  const db = loadDB();
+  const filtered = db.filter(i => i.shortId !== req.params.id);
+  saveDB(filtered);
+  res.json({ success: true });
+});
+
+app.get('/api/admin/export', verifyAdmin, (req, res) => {
+  const type = req.query.type;
+  const db = loadDB();
+
+  if (type === 'csv') {
+    const csv = db.map(i => `${i.shortId},${i.originalUrl},${i.clicks},${i.lastAccess || ''},${i.password ? 'YES' : 'NO'}`).join('\n');
+    res.setHeader('Content-Disposition', 'attachment; filename=shortlinks.csv');
+    res.setHeader('Content-Type', 'text/csv');
+    return res.send(`shortId,url,clicks,lastAccess,password\n${csv}`);
+  } else {
+    res.setHeader('Content-Disposition', 'attachment; filename=shortlinks.json');
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(JSON.stringify(db, null, 2));
+  }
+});
+
+app.get('/api/admin/backup', verifyAdmin, async (req, res) => {
+  try {
+    await kirimFileKeTelegram(DB_PATH);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.get('/api/admin/all', (req, res) => {
   const db = loadDB();
   res.json(db);
