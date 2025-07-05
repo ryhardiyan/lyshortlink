@@ -156,22 +156,6 @@ app.delete('/api/admin/delete/:id', verifyAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/admin/export', verifyAdmin, (req, res) => {
-  const type = req.query.type;
-  const db = loadDB();
-
-  if (type === 'csv') {
-    const csv = db.map(i => `${i.shortId},${i.originalUrl},${i.clicks},${i.lastAccess || ''},${i.password ? 'YES' : 'NO'}`).join('\n');
-    res.setHeader('Content-Disposition', 'attachment; filename=shortlinks.csv');
-    res.setHeader('Content-Type', 'text/csv');
-    return res.send(`shortId,url,clicks,lastAccess,password\n${csv}`);
-  } else {
-    res.setHeader('Content-Disposition', 'attachment; filename=shortlinks.json');
-    res.setHeader('Content-Type', 'application/json');
-    return res.send(JSON.stringify(db, null, 2));
-  }
-});
-
 app.get('/api/admin/backup', verifyAdmin, async (req, res) => {
   try {
     await kirimFileKeTelegram(DB_PATH);
