@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>lyshortlink | Simple URL Shortener</title>
   <link rel="stylesheet" href="styles/style.css" />
-  <!-- Tambahkan ini di dalam <head> -->
-<link rel="manifest" href="/manifest.json" />
-<link rel="icon" href="/icons/icon-192.png" />
-<meta name="theme-color" content="#009688" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icons/icon-192.png" />
+  <meta name="theme-color" content="#009688" />
 </head>
 <body>
   <header>
@@ -61,7 +60,6 @@ RESPONSE:
     </p>
   </footer>
 
-  <!-- 💻 Script mulai di sini -->
   <script>
     const urlInput = document.getElementById('urlInput');
     const resultDiv = document.getElementById('result');
@@ -91,7 +89,7 @@ RESPONSE:
             <button class="copy-btn" onclick="copyToClipboard('${data.shortUrl}')">📋</button>
           `;
           showToast("Shortlink berhasil dibuat!", "success");
-          urlInput.value = ""; // Clear input setelah sukses
+          urlInput.value = "";
         } else {
           resultDiv.textContent = data.error || 'Gagal buat shortlink.';
           showToast(data.error || "Gagal memproses URL.", "error");
@@ -134,13 +132,13 @@ RESPONSE:
       }, 3000);
     }
   </script>
-  <!-- Tambahkan ini di bawah semua script sebelum </body> -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('✅ Service Worker terdaftar'))
-      .catch(err => console.error('❌ Gagal daftarin SW:', err));
-  }
-</script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('✅ Service Worker terdaftar'))
+        .catch(err => console.error('❌ Gagal daftarin SW:', err));
+    }
+  </script>
 </body>
 </html>
